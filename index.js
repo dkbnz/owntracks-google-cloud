@@ -1,7 +1,7 @@
 const Firestore = require('@google-cloud/firestore');
 
 const PROJECTID = 'owntracks-record';
-const COLLECTION_NAME = 'owntracks-record';
+const COLLECTION_NAME = 'locations';
 
 const database = new Firestore({
   projectId: PROJECTID,
@@ -77,10 +77,15 @@ function retrievePoints(req, res) {
  * @param {!express:Response} res HTTP response context.
  */
 function storePoints(req, res) {
+  data = req.body
+  if (data._type !== "location") {
+    return res.status(501).send('Not Implemented')
+  }
   return database.collection(COLLECTION_NAME)
   .add({
-    lat: 234,
-    lon: 534
+    tst: Number.parseInt(data.tst),
+    lat: Number.parseFloat(data.lat),
+    lon: Number.parseFloat(data.lon)
   }).then(doc => {
     console.info('Location stored with id', doc.id);
     return res.status(200).send(doc.id);
