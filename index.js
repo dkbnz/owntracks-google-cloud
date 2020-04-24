@@ -8,6 +8,7 @@ const database = new Firestore({
   timestampsInSnapshots: true,
 });
 
+
 /**
  * Helper function to shuffle an array.
  * Used to obscure point order to prevent knowing current location.
@@ -48,6 +49,7 @@ function authenticate(req, res) {
   }
 }
 
+
 /**
  * Retrieve list of locations user has been
  *
@@ -66,6 +68,7 @@ function retrievePoints(req, res) {
     });
   });
 }
+
 
 /**
  * Store location in database
@@ -89,6 +92,7 @@ function storePoints(req, res) {
     });
   });
 }
+
 
 /**
  * Responds to any HTTP request.
