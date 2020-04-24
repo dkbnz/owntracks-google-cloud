@@ -1,3 +1,32 @@
+const Firestore = require('@google-cloud/firestore');
+
+const PROJECTID = 'owntracks-record';
+const COLLECTION_NAME = 'owntracks-record';
+
+const database = new Firestore({
+  projectId: PROJECTID,
+  timestampsInSnapshots: true,
+});
+
+/**
+ * Helper function to shuffle an array.
+ * Used to obscure point order to prevent knowing current location.
+ *
+ * @param {Array} array Array of objects to be shuffled
+ */
+function shuffle(array) {
+    let counter = array.length;
+    while (counter) {
+        let index = Math.floor(Math.random() * counter--);
+
+        let temp = array[counter];
+        array[counter] = array[index];
+        array[index] = temp;
+    }
+
+    return array;
+}
+
 
 /**
  * Authenticates user using basic http authentication.
@@ -26,7 +55,16 @@ function authenticate(req, res) {
  * @param {!express:Response} res HTTP response context.
  */
 function retrievePoints(req, res) {
-  res.status(200).send("Here are the point/s");
+  return database.collection(COLLECTION_NAME).get().then(snapshot => {
+    result = shuffle(snapshot.docs.map(doc => doc.data()))
+    return res.status(200).send(result);
+  }).catch(err => {
+    console.error(err);
+    return res.status(404).send({
+      error: 'Unable to retrieve the document',
+      err
+    });
+  });
 }
 
 /**
@@ -36,7 +74,20 @@ function retrievePoints(req, res) {
  * @param {!express:Response} res HTTP response context.
  */
 function storePoints(req, res) {
-  res.status(200).send("Thanks for the point/s");
+  return database.collection(COLLECTION_NAME)
+  .add({
+    lat: 234,
+    lon: 534
+  }).then(doc => {
+    console.info('Location stored with id', doc.id);
+    return res.status(200).send(doc.id);
+  }).catch(err => {
+    console.error(err);
+    return res.status(404).send({
+      error: 'Unable to store',
+      err
+    });
+  });
 }
 
 /**
@@ -48,12 +99,13 @@ function storePoints(req, res) {
 exports.main = (req, res) => {
   switch(req.method) {
     case 'GET':
-      retrievePoints(req, res)
+      return retrievePoints(req, res)
       break;
     case 'POST':
       authenticate(req, res)
-      storePoints(req, res)
+      return storePoints(req, res)
       break;
     default:
       res.status(501).send('Not Implemented')
   }
+}
