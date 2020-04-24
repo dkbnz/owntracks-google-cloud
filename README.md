@@ -1,2 +1,7 @@
-# owntracks-google-cloud
-Using google cloud functions, firestore and owntracks to create a basic location tracking system.
+# Owntracks Google Cloud
+
+Minimalistic location recorder for Owntracks using Google Cloud Functions and Firestore.
+
+# Deploy
+
+Coming soon...
