@@ -2,6 +2,6 @@
 
 Minimalistic location recorder for Owntracks using Google Cloud Functions and Firestore.
 
-# Deploy
+## Deploy
 
 Coming soon...
