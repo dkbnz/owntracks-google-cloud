@@ -69,6 +69,9 @@ function storePoints(req, res) {
       "geometry": {
         "type": "Point",
         "coordinates": [Number.parseFloat(data.lon), Number.parseFloat(data.lat)]
+      },
+      "properties": {
+         "tst": Number.parseFloat(data.tst)
       }
     }).then(doc => {
       console.info('Location stored with id', doc.id);
